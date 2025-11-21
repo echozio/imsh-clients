@@ -313,9 +313,9 @@ wf-recorder "${wfRecorderArgs[@]}" >/dev/null &
 pid=$!
 trap "$(trap -P EXIT)"$'\nfor pid in $(jobs -p); do kill $pid; done' EXIT
 printf "%d" $pid >"$pidFile" \
-  || fatal "wl-recorder unable to write PID: $pidFile"
+  || fatal "wf-recorder unable to write PID: $pidFile"
 wait $pid \
-  || fatal "wl-recorder returned non-zero status"
+  || fatal "wf-recorder returned non-zero status"
 
 if [[ "$upload" -ne 0 ]]; then
   response="$(curl -sS --fail-with-body \
