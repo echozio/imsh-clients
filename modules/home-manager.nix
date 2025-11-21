@@ -36,13 +36,7 @@ in
   };
 
   config = {
-    nixpkgs.overlays = lib.singleton (
-      final: prev: {
-        imsh-shot = final.callPackage ../imsh-shot { };
-        imsh-cast = final.callPackage ../imsh-cast { };
-        imsh-cast-monitor = final.callPackage ../imsh-cast-monitor { };
-      }
-    );
+    nixpkgs.overlays = [ (import ../overlay.nix) ];
 
     programs.imsh-clients = {
       imsh-shot.enable = lib.mkDefault cfg.enable;

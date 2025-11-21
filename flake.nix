@@ -11,22 +11,13 @@
       ];
       argsFor = system: {
         inherit system;
-        pkgs = nixpkgs.legacyPackages.${system}.extend (self: super: {
-          # Remove when https://github.com/NixOS/nixpkgs/pull/463657
-          # makes it to nixos-unstable
-          wf-recorder = super.wf-recorder.overrideAttrs (prev: rec {
-            version = "0.6.0";
-            src = prev.src.override {
-              rev = "v${version}";
-              hash = "sha256-CY0pci2LNeQiojyeES5323tN3cYfS3m4pECK85fpn5I=";
-            };
-            patches = null;
-          });
-        });
+        pkgs = nixpkgs.legacyPackages.${system}.extend self.overlays.default;
       };
       forAllSystems = f: lib.genAttrs systems (system: f (argsFor system));
     in
     {
+      overlays.default = import ./overlay.nix;
+
       devShells = forAllSystems (
         { pkgs, ... }:
         {
